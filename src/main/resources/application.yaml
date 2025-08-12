@@ -1,9 +1,20 @@
 spring:
   application:
     name: demo
-
 # define mysql properties here
-
+  datasource:
+    url: jdbc:mysql://localhost:3306/taskdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: taskuser
+    password: taskpass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
 # define redis properties here
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
-# define rocketmq properties here
+# RocketMQ configuration

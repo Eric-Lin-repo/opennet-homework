@@ -1,0 +1,175 @@
+### Variables
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Create Email Notification
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "recipient": "test@example.com",
+  "subject": "Welcome Email",
+  "content": "Thank you for registering! Your account is ready."
+}
+
+### Create SMS Notification
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "SMS",
+  "recipient": "+1234567890",
+  "content": "Your verification code: 123456"
+}
+
+### Get Notification by ID
+GET {{baseUrl}}/notifications/21
+
+### Get Recent Notifications
+GET {{baseUrl}}/notifications/recent
+
+### Update Notification (Full)
+PUT {{baseUrl}}/notifications/1
+Content-Type: {{contentType}}
+
+{
+  "subject": "Updated Subject",
+  "content": "This is the updated content"
+}
+
+### Update Notification (Partial - Subject Only)
+PUT {{baseUrl}}/notifications/1
+Content-Type: {{contentType}}
+
+{
+  "subject": "Only subject updated"
+}
+
+### Update Notification (Partial - Content Only)
+PUT {{baseUrl}}/notifications/1
+Content-Type: {{contentType}}
+
+{
+  "content": "Only content updated"
+}
+
+### Delete Notification
+DELETE {{baseUrl}}/notifications/1
+
+### === ERROR TESTS ===
+
+### Validation Error - Missing Required Fields
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "subject": "Test Subject"
+}
+
+### Validation Error - Empty Required Fields
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "recipient": "",
+  "content": ""
+}
+
+### Invalid Notification Type
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "INVALID_TYPE",
+  "recipient": "test@example.com",
+  "content": "Test content"
+}
+
+### Not Found - Get Non-existent Notification
+GET {{baseUrl}}/notifications/999
+
+### Not Found - Update Non-existent Notification
+PUT {{baseUrl}}/notifications/999
+Content-Type: {{contentType}}
+
+{
+  "subject": "test"
+}
+
+### Not Found - Delete Non-existent Notification
+DELETE {{baseUrl}}/notifications/999
+
+### Invalid JSON Format
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{"type": "EMAIL", "recipient": "test@example.com"
+
+### Large Content Test
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "recipient": "test@example.com",
+  "subject": "Large Content Test",
+  "content": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+}
+
+### === BULK TESTING ===
+
+### Bulk Create Test 1
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "SMS",
+  "recipient": "+111111111",
+  "content": "Bulk message 1"
+}
+
+### Bulk Create Test 2
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "SMS",
+  "recipient": "+222222222",
+  "content": "Bulk message 2"
+}
+
+### Bulk Create Test 3
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "recipient": "bulk1@test.com",
+  "subject": "Bulk Test",
+  "content": "Bulk email message 1"
+}
+
+### Bulk Create Test 4
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "recipient": "bulk2@test.com",
+  "subject": "Bulk Test",
+  "content": "Bulk email message 2"
+}
+
+### Bulk Create Test 5
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "type": "EMAIL",
+  "recipient": "bulk3@test.com",
+  "subject": "Bulk Test",
+  "content": "Bulk email message 3"
+}
