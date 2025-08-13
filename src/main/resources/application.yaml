@@ -18,3 +18,7 @@ spring:
       port: 6379
 
 # RocketMQ configuration
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: notification-producer-group

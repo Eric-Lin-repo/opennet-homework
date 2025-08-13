@@ -6,6 +6,7 @@ import com.example.demo.dto.RecentNotificationResponse;
 import com.example.demo.dto.UpdateNotificationRequest;
 import com.example.demo.exception.NotificationNotFoundException;
 import com.example.demo.model.Notification;
+import com.example.demo.mq.RocketMQService;
 import com.example.demo.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final RedisService redisService;
+    private final RocketMQService rocketMQService;
+
 
     @Transactional
     public NotificationResponse createNotification(CreateNotificationRequest request) {
@@ -40,6 +43,7 @@ public class NotificationService {
 
         RecentNotificationResponse recentResponse = mapToRecentResponse(saved);
         redisService.add(recentResponse);
+        rocketMQService.send(response);
         return response;
     }
 

@@ -20,22 +20,23 @@ Content-Type: {{contentType}}
 {
   "type": "SMS",
   "recipient": "+1234567890",
+   "subject": "Welcome SMS",
   "content": "Your verification code: 123456"
 }
 
 ### Get Notification by ID
-GET {{baseUrl}}/notifications/21
+GET {{baseUrl}}/notifications/2
 
 ### Get Recent Notifications
 GET {{baseUrl}}/notifications/recent
 
 ### Update Notification (Full)
-PUT {{baseUrl}}/notifications/1
+PUT {{baseUrl}}/notifications/2
 Content-Type: {{contentType}}
 
 {
   "subject": "Updated Subject",
-  "content": "This is the updated content"
+  "content": "updated content"
 }
 
 ### Update Notification (Partial - Subject Only)
@@ -55,7 +56,7 @@ Content-Type: {{contentType}}
 }
 
 ### Delete Notification
-DELETE {{baseUrl}}/notifications/1
+DELETE {{baseUrl}}/notifications/2
 
 ### === ERROR TESTS ===
 
@@ -83,7 +84,7 @@ POST {{baseUrl}}/notifications
 Content-Type: {{contentType}}
 
 {
-  "type": "INVALID_TYPE",
+  "type": "EMAIL ERROR",
   "recipient": "test@example.com",
   "content": "Test content"
 }
@@ -107,69 +108,3 @@ POST {{baseUrl}}/notifications
 Content-Type: {{contentType}}
 
 {"type": "EMAIL", "recipient": "test@example.com"
-
-### Large Content Test
-POST {{baseUrl}}/notifications
-Content-Type: {{contentType}}
-
-{
-  "type": "EMAIL",
-  "recipient": "test@example.com",
-  "subject": "Large Content Test",
-  "content": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-}
-
-### === BULK TESTING ===
-
-### Bulk Create Test 1
-POST {{baseUrl}}/notifications
-Content-Type: {{contentType}}
-
-{
-  "type": "SMS",
-  "recipient": "+111111111",
-  "content": "Bulk message 1"
-}
-
-### Bulk Create Test 2
-POST {{baseUrl}}/notifications
-Content-Type: {{contentType}}
-
-{
-  "type": "SMS",
-  "recipient": "+222222222",
-  "content": "Bulk message 2"
-}
-
-### Bulk Create Test 3
-POST {{baseUrl}}/notifications
-Content-Type: {{contentType}}
-
-{
-  "type": "EMAIL",
-  "recipient": "bulk1@test.com",
-  "subject": "Bulk Test",
-  "content": "Bulk email message 1"
-}
-
-### Bulk Create Test 4
-POST {{baseUrl}}/notifications
-Content-Type: {{contentType}}
-
-{
-  "type": "EMAIL",
-  "recipient": "bulk2@test.com",
-  "subject": "Bulk Test",
-  "content": "Bulk email message 2"
-}
-
-### Bulk Create Test 5
-POST {{baseUrl}}/notifications
-Content-Type: {{contentType}}
-
-{
-  "type": "EMAIL",
-  "recipient": "bulk3@test.com",
-  "subject": "Bulk Test",
-  "content": "Bulk email message 3"
-}
