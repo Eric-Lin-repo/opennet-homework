@@ -21,7 +21,8 @@ public class CreateNotificationRequest {
     @NotBlank(message = "Recipient is required")
     @Size(max = 255, message = "Recipient cannot exceed 255 characters")
     private String recipient;
-    
+
+    @NotBlank(message = "Subject is required")
     @Size(max = 255, message = "Subject cannot exceed 255 characters")
     private String subject;
     

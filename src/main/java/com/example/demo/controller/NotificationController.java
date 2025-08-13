@@ -29,22 +29,26 @@ public class NotificationController {
 
     @PostMapping
     public ResponseEntity<NotificationResponse> create(@Valid @RequestBody CreateNotificationRequest request) {
-        return ResponseEntity.ok(notificationService.createNotification(request));
+        NotificationResponse response = notificationService.createNotification(request);
+        return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<NotificationResponse> get(@PathVariable Long id) {
-        return ResponseEntity.ok(notificationService.getNotificationById(id));
+        NotificationResponse response = notificationService.getNotificationById(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/recent")
     public ResponseEntity<List<RecentNotificationResponse>> getRecent() {
-        return ResponseEntity.ok(notificationService.getRecentNotifications());
+        List<RecentNotificationResponse> response = notificationService.getRecentNotifications();
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public NotificationResponse update(@PathVariable Long id, @Valid @RequestBody UpdateNotificationRequest request) {
-        return notificationService.updateNotification(id, request);
+    public ResponseEntity<NotificationResponse> update(@PathVariable Long id, @Valid @RequestBody UpdateNotificationRequest request) {
+        NotificationResponse response = notificationService.updateNotification(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

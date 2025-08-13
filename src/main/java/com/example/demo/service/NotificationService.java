@@ -9,6 +9,9 @@ import com.example.demo.model.Notification;
 import com.example.demo.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final RedisService redisService;
 
     @Transactional
     public NotificationResponse createNotification(CreateNotificationRequest request) {
@@ -31,39 +35,70 @@ public class NotificationService {
                 .content(request.getContent())
                 .build();
 
-        return mapToResponse(notificationRepository.save(notification));
+        Notification saved = notificationRepository.save(notification);
+        NotificationResponse response = mapToResponse(saved);
+
+        RecentNotificationResponse recentResponse = mapToRecentResponse(saved);
+        redisService.add(recentResponse);
+        return response;
     }
 
+    @Cacheable(value = "notification", key = "#id")
     public NotificationResponse getNotificationById(Long id) {
-        return notificationRepository.findById(id)
-                .map(this::mapToResponse)
-                .orElseThrow(() -> new NotificationNotFoundException(id));
-    }
-
-    public List<RecentNotificationResponse> getRecentNotifications() {
-        return notificationRepository.findTop10ByOrderByCreatedAtDesc().stream()
-                .map(this::mapToRecentResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public NotificationResponse updateNotification(Long id, UpdateNotificationRequest request) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotificationNotFoundException(id));
 
-        if (request.getSubject() != null) notification.setSubject(request.getSubject());
-        if (request.getContent() != null) notification.setContent(request.getContent());
+        return mapToResponse(notification);
+    }
 
-        return mapToResponse(notificationRepository.save(notification));
+    public List<RecentNotificationResponse> getRecentNotifications() {
+        List<RecentNotificationResponse> cached = redisService.get();
+        if (!cached.isEmpty()) {
+            return cached;
+        }
+
+        List<RecentNotificationResponse> dbRecent = notificationRepository.findTop10ByOrderByCreatedAtDesc().stream()
+                .map(this::mapToRecentResponse)
+                .collect(Collectors.toList());
+
+        dbRecent.forEach(redisService::add);
+
+        return dbRecent;
     }
 
     @Transactional
+    @CachePut(value = "notification", key = "#id")
+    public NotificationResponse updateNotification(Long id, UpdateNotificationRequest request) {
+
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new NotificationNotFoundException(id));
+
+        if (request.getSubject() != null && !request.getSubject().trim().isEmpty()) {
+            notification.setSubject(request.getSubject());
+        }
+        if (request.getContent() != null && !request.getContent().trim().isEmpty()) {
+            notification.setContent(request.getContent());
+        }
+
+        Notification updated = notificationRepository.save(notification);
+        NotificationResponse response = mapToResponse(updated);
+
+        RecentNotificationResponse recentResponse = mapToRecentResponse(updated);
+        redisService.update(recentResponse);
+
+        return response;
+    }
+
+    @Transactional
+    @CacheEvict(value = "notification", key = "#id")
     public void deleteNotification(Long id) {
+
         if (!notificationRepository.existsById(id)) {
             throw new NotificationNotFoundException(id);
         }
 
         notificationRepository.deleteById(id);
+        redisService.remove(id);
     }
 
     private NotificationResponse mapToResponse(Notification notification) {
