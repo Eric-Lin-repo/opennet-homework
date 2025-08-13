@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 2000ms
+    
+  cache:
+    type: simple
+
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: test-notification-producer-group
+
+logging:
+  level:
+    com.example.demo: DEBUG
+    org.springframework.cache: DEBUG
